@@ -1,0 +1,34 @@
+﻿@using UserRegFormHWv01.DAL.Entities;
+@{
+    ViewData["Title"] = "Auth Page";
+    var user = ViewData["LoginUser"] as User;
+}
+@if (user == null)
+{
+    <form action="/Auth/Login"
+      method="post"
+      enctype="application/x-www-form-urlencoded">
+
+        Login: <input type="text" name="UserLogin" />
+        <br />
+
+        Password: <input type="password" name="UserPassword" />
+        <br />
+
+        <button>Log in</button>
+    </form>
+
+    @ViewData["AuthError"]
+
+    <br />
+    <button onclick="location='/Auth/Register'">
+        Register
+    </button>
+}
+else
+{
+    <p>
+        Hello, <b>@user.RealName</b>
+    </p>
+    <img src="./img/@user.Avatar" style="max-width:40px;border-radius:50%"/>
+}

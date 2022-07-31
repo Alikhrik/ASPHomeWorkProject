@@ -1,0 +1,45 @@
+﻿@{
+    var err = ViewData["err"] as string[];
+    var regUser = ViewData["RegUser"] as RegUserModel;
+}
+<form
+    action="/Auth/RegUser"
+    method="post"
+    enctype="multipart/form-data">
+
+    Имя: <input type="text" name="RealName" value="@regUser?.RealName"/>
+    @if (!String.IsNullOrEmpty(err?[1]))
+        @err[1]
+
+    <br/>
+    Логин: <input type="text" name="Login" value="@regUser?.Login"/>
+    @if (!String.IsNullOrEmpty(err?[2]))
+        @err[2]
+
+    @if (!string.IsNullOrEmpty(err?[7]))
+        @err[7]
+
+    <br/>
+    Пароль: <input type="password" name="Password1"/>
+    @if (!String.IsNullOrEmpty(err?[3]))
+        @err[3]    
+
+    <br/>
+    Пароль: <input type="password" name="Password2"/>
+    @if (!String.IsNullOrEmpty(err?[4]))
+        @err[4]
+
+    @if (!String.IsNullOrEmpty(err?[6]))
+        @err[6]
+
+    <br/>
+    E-mail: <input type="email" name="Email" value="@regUser?.Email"/>
+    @if (!String.IsNullOrEmpty(err?[5]))
+        @err[5]
+
+    <br/>
+    Avatar <input type="file" name="Avatar" value="@regUser?.Avatar"/>
+    <br/>
+
+    <button>Зарегестрироваться</button>
+</form>
