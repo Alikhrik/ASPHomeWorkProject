@@ -277,11 +277,10 @@ namespace UserRegFormHWv01.Controllers
                 return Json(new {Status = "Error", Message = ex });
             }
 
-            string HFileName = String.Empty;
             string fullFileName = userAvatar.FileName;
             var fileType = fullFileName[fullFileName.LastIndexOf('.')..];
             var HashFileName = _hasher.Hash(fullFileName[..(fileType.Length - 2)] + DateTime.Now);
-            HFileName = HashFileName + fileType;
+            string HFileName = HashFileName + fileType;
 
             System.IO.File.Delete("./wwwroot/img/" + _authService.User.Avatar);
             using (var file = new FileStream("./wwwroot/img/" + HFileName, FileMode.Create))

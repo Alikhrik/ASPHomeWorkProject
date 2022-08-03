@@ -6,6 +6,8 @@ namespace UserRegFormHWv01.DAL.Context
     public class IntroContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Topic> Topics { get; set; }
+        public DbSet<Article> Articles { get; set; }
 
         public IntroContext(DbContextOptions options)
             :base(options) { }
