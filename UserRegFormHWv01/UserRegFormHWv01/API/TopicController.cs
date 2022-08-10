@@ -5,7 +5,7 @@ using UserRegFormHWv01.Services;
 
 namespace UserRegFormHWv01.API
 {
-    [Route("api/[controller]")]
+    [Route("api/topic")]
     [ApiController]
     public class TopicController : ControllerBase
     {
