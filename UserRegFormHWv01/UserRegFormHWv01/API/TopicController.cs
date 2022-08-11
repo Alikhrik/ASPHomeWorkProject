@@ -93,5 +93,24 @@ namespace UserRegFormHWv01.API
         {
             return _context.Topics;
         }
+
+        [HttpGet("{id}")]
+        public object Get(string id)
+        {
+            Guid userGuid;
+            try { userGuid = Guid.Parse(id); }
+            catch (Exception)
+            {
+                return new
+                {
+                    status = "Error",
+                    message = "Id invalid (GUID expected)"
+                };
+            }
+            var user = _context.Topics.Find(userGuid);
+            if (user == null)
+                return new { status = "Error", message = "Forbidden" };
+            return user;
+        }
     }
 }
