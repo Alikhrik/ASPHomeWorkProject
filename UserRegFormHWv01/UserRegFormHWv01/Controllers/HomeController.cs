@@ -27,7 +27,7 @@ namespace UserRegFormHWv01.Controllers
         {
             ViewData["AuthInterval"] = _authService.AuthInterval;
             ViewData["LoginUser"] = _authService.User;
-            base.OnActionExecuting(context);
+            //base.OnActionExecuting(context);
         }
         public IActionResult Index()
         {

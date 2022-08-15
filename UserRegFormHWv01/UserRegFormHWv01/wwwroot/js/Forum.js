@@ -3,11 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //const app = document.getElementById("app");
     const app = document.querySelector("app");
     if (!app) throw "Forum script: APP not found";
-    //app.innerHTML = "APP will be here";
     loadTopics(app);
-    //const table = document.querySelector("table");
-    //if (!table) throw "Forum script: Table not found";
-    //loadTopics(table);
 });
 
 function loadTopics(elem) {
@@ -38,14 +34,19 @@ function showTopics(elem, j) {
         .then(trTemplate => {
             var appHtml = "";
             for (let topic of j) {
-                appHtml +=
-                    trTemplate
-                        .replace("{{title}}", topic.title)
-                        .replace("{{description}}", topic.description)
-                        .replace("{{id}}", topic.id)
-                        .replace("{{showTopic}}", showTopic.name + "(event)");
+                let tpl = trTemplate;
+                for (let prop in topic) {
+                    tpl = tpl.replaceAll(`{{${prop}}}`, topic[prop]);
+                }
+                appHtml += tpl;
+                //appHtml +=
+                //    trTemplate
+                //        .replace("{{title}}", topic.title)
+                //        .replace("{{description}}", topic.description)
+                //        .replace("{{id}}", topic.id);
             }
             elem.innerHTML = appHtml;
+            topicLoaded();
         });
 }
 
@@ -57,13 +58,13 @@ function showTopic(e) {
         .then(r => r.json())
         .then(j => console.log(j));
 }
-//function showTopics(elem, j) {
-//    //elem.innerHTML = "topics will be here";
-//    for (let topic of j) {
-//        elem.innerHTML += 
-//            `<tr data-id'${topic.id}>
-//                <td><b>${topic.title}</b></td>
-//                <td>${topic.description}</td>
-//            </tr>`;
-//    }
-//}
+function topicClick(e) {
+    location = "/Forum/Topic/" +
+        e.target.closest(".topic").getAttribute("data-id");
+}
+
+async function topicLoaded() {
+    for (let topic of document.querySelectorAll(".topic")) {
+        topic.onclick = topicClick;
+    }
+}

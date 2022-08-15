@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Topic Page";
+}
+
+<p>
+    @ViewData["id"]
+</p>
+
+@if(ViewData["LoginUser"] == null)
+{
+    <i>Необходимо войти  систему</i>
+}
+else
+{
+    <b>Добавить комментарий</b>
+    <br />
+    
+    <input type="file" id="article-image" accept="image/*" />
+    <br />
+
+    <textarea id="article-text" 
+        data-author-id="@ViewData["authorId"]"
+        data-topic-id="@ViewData["id"]"></textarea>
+    <br />
+    <button id="button-publish">Опубликовать</button>
+    <script src="~/js/Topic.js"></script>
+}
