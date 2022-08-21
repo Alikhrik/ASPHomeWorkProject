@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using UserRegFormHWv01.DAL.Context;
 using UserRegFormHWv01.Services;
 
 namespace UserRegFormHWv01.API
 {
-    [Route("api/[controller]")]
+    [Route("api/article")]
     [ApiController]
     public class ArticleController : ControllerBase
     {
@@ -27,7 +28,17 @@ namespace UserRegFormHWv01.API
             {
                 return null;
             }
-            return _context.Articles.Where(a => a.TopicId == guid);
+            //var list = _context.Articles
+            //    .Include(a => a.Author)
+            //    .Include(a => a.Topic)
+            //    .Where(a => a.TopicId == guid)
+            //    .OrderBy(a => a.CreatedDate);
+
+            return _context.Articles
+                .Include(a => a.Author)
+                .Include(a => a.Topic)
+                .Where(a => a.TopicId == guid)
+                .OrderBy(a => a.CreatedDate);
         }
 
         [HttpPost]

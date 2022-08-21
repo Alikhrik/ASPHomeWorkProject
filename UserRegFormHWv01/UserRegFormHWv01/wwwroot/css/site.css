@@ -26,8 +26,24 @@ body {
     padding: 4vh 4vw;
 }
 
-/*-------------*/
-/*html {
+figure {
+    border: thin #c0c0c0 solid;
+   /* display: flex;
+    flex-flow: column;
+    padding: 5px;*/
+    max-width: 220px;
+    margin: auto;
+}
+
+figcaption {
+    text-align: center;
+}
+
+.article {
+    border:1px solid salmon
+}
+    /*-------------*/
+    /*html {
     font-family: sans-serif;
 }
 

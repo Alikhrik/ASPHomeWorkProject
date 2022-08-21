@@ -9,16 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
 function loadTopics(elem) {
     fetch("/api/topic", {
         method: "GET",
-        headers: {
-            "User-Id": "",
-            "Culture": ""
-        },
         body: null
     })
         .then(r => r.json())
         .then(j => {
             //console.log(j);
             if (j instanceof Array) {
+                //console.log(j)
                 showTopics(elem, j);
             }
             else {
@@ -34,16 +31,18 @@ function showTopics(elem, j) {
         .then(trTemplate => {
             var appHtml = "";
             for (let topic of j) {
-                let tpl = trTemplate;
-                for (let prop in topic) {
-                    tpl = tpl.replaceAll(`{{${prop}}}`, topic[prop]);
-                }
-                appHtml += tpl;
-                //appHtml +=
-                //    trTemplate
-                //        .replace("{{title}}", topic.title)
-                //        .replace("{{description}}", topic.description)
-                //        .replace("{{id}}", topic.id);
+                //let tpl = trTemplate;
+                //for (let prop in topic) {
+                //    tpl = tpl.replaceAll(`{{${prop}}}`, topic[prop]);
+                //}
+                //appHtml += tpl;
+                appHtml +=
+                    trTemplate
+                        .replace("{{title}}", topic.title)
+                        .replace("{{description}}", topic.description)
+                        .replace("{{id}}", topic.id)
+                        .replace("{{realName}}", topic.author.realName)
+                        .replace("{{avatar}}", topic.author.avatar);
             }
             elem.innerHTML = appHtml;
             topicLoaded();

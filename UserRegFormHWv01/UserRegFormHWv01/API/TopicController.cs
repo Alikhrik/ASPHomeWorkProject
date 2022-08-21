@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using UserRegFormHWv01.DAL.Context;
 using UserRegFormHWv01.Services;
 
@@ -91,7 +92,7 @@ namespace UserRegFormHWv01.API
         [HttpGet]
         public IEnumerable<DAL.Entities.Topic> Get()
         {
-            return _context.Topics;
+            return _context.Topics.Include(a => a.Author);
         }
 
         [HttpGet("{id}")]

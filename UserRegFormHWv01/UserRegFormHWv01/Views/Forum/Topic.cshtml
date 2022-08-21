@@ -6,6 +6,8 @@
     @ViewData["id"]
 </p>
 
+<articles topic-id='@ViewData["id"]'></articles><br />
+
 @if(ViewData["LoginUser"] == null)
 {
     <i>Необходимо войти  систему</i>
@@ -23,5 +25,5 @@ else
         data-topic-id="@ViewData["id"]"></textarea>
     <br />
     <button id="button-publish">Опубликовать</button>
-    <script src="~/js/Topic.js"></script>
 }
+<script src="~/js/Topic.js"></script>

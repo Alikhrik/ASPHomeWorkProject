@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserRegFormHWv01.DAL.Context;
 
@@ -11,9 +12,10 @@ using UserRegFormHWv01.DAL.Context;
 namespace UserRegFormHWv01.Migrations
 {
     [DbContext(typeof(IntroContext))]
-    partial class IntroContextModelSnapshot : ModelSnapshot
+    [Migration("20220817174324_Relations")]
+    partial class Relations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
