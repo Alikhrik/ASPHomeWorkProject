@@ -26,22 +26,59 @@ body {
     padding: 4vh 4vw;
 }
 
-figure {
-    border: thin #c0c0c0 solid;
+/*figure {
+    border: thin #c0c0c0 solid;*/
    /* display: flex;
     flex-flow: column;
     padding: 5px;*/
-    max-width: 220px;
+    /*max-width: 220px;
     margin: auto;
 }
 
 figcaption {
     text-align: center;
+}*/
+
+.article { /* блок публикации */
+    border: 1px solid salmon;
+    box-shadow: 1px 2px 4px 4px lightgray;
+    margin: 1em auto;
+    width: 75vw;
 }
 
-.article {
-    border:1px solid salmon
-}
+    .article span { /* "кнопка" ответить (reply) */
+        cursor: pointer;
+        float: right;
+        font-size: x-large;
+        margin: -5px 10px 0 0;
+    }
+
+    .article em { /* блок имени автора и его картинки */
+        border-right: 1px solid gray;
+        float: left;
+        margin: 3px;
+        width: 150px;
+    }
+
+        .article em b { /* автор (имя) */
+            display: block;
+            margin: auto;
+        }
+
+        .article em img { /* картинка */
+            max-width: 100%;
+        }
+    .article hr {
+        margin-left: 120px;
+    }
+    .article p {
+
+    }
+        .article p img {
+            float: left;
+            margin-right: 1ch;
+            max-width: 70px;
+        }
     /*-------------*/
     /*html {
     font-family: sans-serif;

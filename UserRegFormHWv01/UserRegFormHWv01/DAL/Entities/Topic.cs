@@ -12,5 +12,8 @@ namespace UserRegFormHWv01.DAL.Entities
         public string Description { get; set; }
         public Guid AuthorId { get; set; }
         public Entities.User Author { get; set; }
+
+        public DateTime CreateDate { get; set; }
+        public DateTime LastArticleMoment { get; set; }
     }
 }

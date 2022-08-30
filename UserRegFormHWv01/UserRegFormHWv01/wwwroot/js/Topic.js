@@ -49,8 +49,10 @@ function loadArticles() {
                         .replaceAll("{{text}}", articles.text)
                         .replaceAll("{{avatar}}", (articles.author.avatar == null || articles.author.avatar == "" ?
                             "no-avatar.png" : articles.author.avatar))
-                        .replaceAll("{{createdDate}}", new Date(articles.createdDate).toLocaleString())
-                        .replaceAll("{{id}}", articles.id);
+                        .replaceAll("{{moment}}", new Date(articles.createdDate).toLocaleString())
+                        .replaceAll("{{id}}", articles.id)
+                    .replaceAll("{{picture}}", articles.pictureFile == null || articles.pictureFile == "" ? "no-picture.png" : articles.pictureFile)
+                        .replaceAll("{{reply}}", articles.replyId == null ? "" : articles.replyId);
             }
             articles.innerHTML = html;
             onArticlesLoaded();

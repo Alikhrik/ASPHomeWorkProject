@@ -78,7 +78,8 @@ namespace UserRegFormHWv01.API
             {
                 Title = topic.Title,
                 Description = topic.Description,
-                AuthorId = user.Id
+                AuthorId = user.Id,
+                CreateDate = DateTime.Now
             });
             _context.SaveChangesAsync();
 
@@ -92,7 +93,7 @@ namespace UserRegFormHWv01.API
         [HttpGet]
         public IEnumerable<DAL.Entities.Topic> Get()
         {
-            return _context.Topics.Include(a => a.Author);
+            return _context.Topics.Include(a => a.Author).OrderByDescending(t => t.LastArticleMoment);
         }
 
         [HttpGet("{id}")]

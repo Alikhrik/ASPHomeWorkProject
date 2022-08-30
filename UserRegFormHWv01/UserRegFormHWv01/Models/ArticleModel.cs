@@ -5,5 +5,6 @@
         public string TopicId { get; set; }
         public string Text { get; set; }
         public IFormFile? PictureFile { get; set; }
+        public string? ReplyId { get; set; }
     }
 }

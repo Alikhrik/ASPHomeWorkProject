@@ -69,6 +69,20 @@ namespace UserRegFormHWv01.API
                 };
             }
 
+            Guid repltIdGuid = Guid.Empty;
+            if (!string.IsNullOrEmpty(article.ReplyId))
+            {
+                try { repltIdGuid = Guid.Parse(article.ReplyId); }
+                catch (Exception)
+                {
+                    return new
+                    {
+                        status = "Error",
+                        message = "ReplyId empty or invalid (GUID expected)"
+                    };
+                }
+            }
+
             var user = _context.Users.Find(userGuid);
             if (user == null)
                 return new { status = "Error",  message = "Forbidden" };
@@ -80,14 +94,17 @@ namespace UserRegFormHWv01.API
             if (article.PictureFile != null)
                 HAvatarName = AddAvatar(article.PictureFile);
 
-
-            _context.Articles.Add(new() { 
+            var TimeNow = DateTime.Now;
+            _context.Articles.Add(new() {
                 TopicId = topicGuid,
                 Text = article.Text,
                 AuthorId = userGuid,
-                CreatedDate = DateTime.Now,
-                PictureFile = HAvatarName
+                CreatedDate = TimeNow,
+                PictureFile = HAvatarName,
+                ReplyId = repltIdGuid
             });
+
+            topic.LastArticleMoment = TimeNow;
             _context.SaveChanges();
 
             return new
