@@ -38,7 +38,7 @@ namespace UserRegFormHWv01.API
                 .Include(a => a.Author)
                 .Include(a => a.Topic)
                 .Include(a => a.Reply)
-                .Where(a => a.TopicId == guid)
+                .Where(a => a.TopicId == guid && a.DeleteMoment == null)
                 .OrderBy(a => a.CreatedDate);
         }
 
@@ -106,7 +106,7 @@ namespace UserRegFormHWv01.API
                 AuthorId = userGuid,
                 CreatedDate = TimeNow,
                 PictureFile = HAvatarName,
-                ReplyId = repltIdGuid
+                ReplyId = (repltIdGuid == Guid.Empty ? null : repltIdGuid)
             });
 
             topic.LastArticleMoment = TimeNow;

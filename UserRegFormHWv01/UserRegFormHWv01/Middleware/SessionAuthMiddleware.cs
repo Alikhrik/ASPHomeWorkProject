@@ -20,7 +20,7 @@ namespace UserRegFormHWv01.Middleware
                 if (auth.User != null)
                 {
                     auth.SetAuthInterval(Convert.ToInt64(context.Session.GetString("AuthMoment")));
-                    if (auth.AuthInterval > 60)
+                    if (auth.AuthInterval > 310)
                     {
                         context.Session.Remove("UserId");
                         context.Session.Remove("AuthMoment");

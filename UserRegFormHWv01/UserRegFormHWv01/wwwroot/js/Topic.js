@@ -47,7 +47,6 @@ function loadArticles() {
     const TopicId = articles.getAttribute("topic-id");
     const authorId = articleText ? articleText.getAttribute("data-author-id") : null;
 
-    const GuidEmpty = "00000000-0000-0000-0000-000000000000";
     fetch(`/api/article/${TopicId}`)
         .then(r => r.json())
         .then(async j => {
@@ -63,19 +62,19 @@ function loadArticles() {
                         .replaceAll("{{moment}}", new Date(article.createdDate).toLocaleString())
                         .replaceAll("{{id}}", article.id)
                         .replaceAll("{{picture}}", article.pictureFile == null || article.pictureFile == "" ? "no-picture.png" : article.pictureFile)
-                        .replaceAll("{{reply}}",( article.replyId == GuidEmpty
+                        .replaceAll("{{reply}}",( article.replyId == null
                         ? ""
                         : `<b>${article.reply.author.realName}</b>:`
                             + article.reply.text.substring(0, 13)
                             + (article.reply.text.length > 13 ? "..." : "")
                         ))
-                    .replace("{{reply-text}}", article.reply == null ? "" : article.reply.text)
+                        .replace("{{reply-text}}", article.reply == null ? "" : article.reply.text)
                         .replace("{{del-display}}", /* кнопка удаления (стиль display) */
                             (article.authorId == authorId
                                 ? "inline-block"
                                 : "none"))
                         .replace("{{ins-display}}", /* кнопка редактирования (стиль display) */
-                            (article.authorId == authorId
+                            ((article.authorId == authorId && article.reply == null)
                                 ? "inline-block"
                                 : "none"));
             }
@@ -88,6 +87,9 @@ function onArticlesLoaded() {
     for (let span of document.querySelectorAll(".article span")) {
         span.onclick = replyClick;
     }
+    for (let del of document.querySelectorAll(".article del")) {
+        del.onclick = deleteClick;
+    }
 }
 
 function replyClick(e) {
@@ -96,4 +98,9 @@ function replyClick(e) {
     const articleText = document.getElementById("article-text");
     if (articleText) articleText.focus();
     articleText.setAttribute("data-reply-id", id);
+}
+
+function deleteClick(e) {
+    const id = e.target.closest(".article").getAttribute("data-id");
+    console.log(id);
 }

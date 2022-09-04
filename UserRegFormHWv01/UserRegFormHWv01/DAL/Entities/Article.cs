@@ -20,5 +20,7 @@ namespace UserRegFormHWv01.DAL.Entities
 
         public DateTime CreatedDate { get; set; }
         public string PictureFile { get; set; }
+
+        public DateTime? DeleteMoment { get; set; }
     }
 }
