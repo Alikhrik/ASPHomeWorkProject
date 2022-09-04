@@ -20,9 +20,19 @@ else
     <input type="file" id="article-image" accept="image/*" />
     <br />
 
-    <textarea id="article-text" 
-        data-author-id="@ViewData["authorId"]"
-        data-topic-id="@ViewData["id"]"></textarea>
+    @*<div>
+        <em style="float: left; margin: 3px; width: 150px;">
+            <b style="display: block; margin: auto;">author</b>
+            <img style="max-width: 50px;" src='./wwwroot/img/no-avatar.png' />
+        </em>
+        <div style="border: 1px solid">Hello</div>
+        
+    </div>*@
+    <textarea id="article-text"
+            data-author-id="@ViewData["authorId"]"
+            data-topic-id="@ViewData["id"]"
+            data-reply-id=""
+            style="width: 100%"></textarea>
     <br />
     <button id="button-publish">Опубликовать</button>
 }

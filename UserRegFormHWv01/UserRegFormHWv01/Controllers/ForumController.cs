@@ -28,7 +28,7 @@ namespace UserRegFormHWv01.Controllers
         {
             ViewData["id"] = id;
             ViewData["authorId"] = _authService.User?.Id.ToString();
-            return View();
+            return View("Topic");
         }
     }
 }

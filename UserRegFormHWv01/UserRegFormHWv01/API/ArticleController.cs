@@ -37,6 +37,7 @@ namespace UserRegFormHWv01.API
             return _context.Articles
                 .Include(a => a.Author)
                 .Include(a => a.Topic)
+                .Include(a => a.Reply)
                 .Where(a => a.TopicId == guid)
                 .OrderBy(a => a.CreatedDate);
         }
@@ -78,9 +79,12 @@ namespace UserRegFormHWv01.API
                     return new
                     {
                         status = "Error",
-                        message = "ReplyId empty or invalid (GUID expected)"
+                        message = "ReplyId invalid (GUID expected)"
                     };
                 }
+                var replyId = _context.Articles.Find(repltIdGuid);
+                if (replyId == null)
+                    return new { status = "Error", message = "Forbidden" };
             }
 
             var user = _context.Users.Find(userGuid);
@@ -89,6 +93,7 @@ namespace UserRegFormHWv01.API
             var topic = _context.Topics.Find(topicGuid);
             if (topic == null)
                 return new { status = "Error", message = "Forbidden" };
+            
 
             string HAvatarName = string.Empty;
             if (article.PictureFile != null)
@@ -125,6 +130,11 @@ namespace UserRegFormHWv01.API
                 PictureFile.CopyTo(file);
 
             return HFileName;
+        }
+
+        public object Default(string? id)
+        {
+            return new { HttpContext.Request.Method, id };
         }
     }
 }

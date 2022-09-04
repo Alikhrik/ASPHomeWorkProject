@@ -100,7 +100,7 @@ namespace UserRegFormHWv01.Controllers
                 var passHashSalt = _hasher.Hash(DateTime.Now.ToString());
                 var passHash = _hasher.Hash(regUser.Password1, passHashSalt);
 
-                string HFileName = String.Empty;
+                string HFileName = ".wwwroot/img/no-avatar.png";
 
                 if (regUser.Avatar != null)
                 {

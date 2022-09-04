@@ -9,12 +9,16 @@ function buttonPublishClick(e) {
     if (!articleText) throw "article-text element not found"
     const articleImage = document.getElementById("article-image");
     if (!articleImage) throw "article-image element not found"
+
     const topicId = articleText.dataset.topicId;
     const authorId = articleText.dataset.authorId;
     const txt = articleText.value;
+    const replyId = articleText.dataset.replyId;
+
     const formData = new FormData();
     formData.append('TopicId', topicId);
     formData.append('Text', txt);
+    formData.append('ReplyId', replyId);
     if (articleImage.files.length > 0) {
         formData.append('PictureFile', articleImage.files[0]);
     }
@@ -25,6 +29,7 @@ function buttonPublishClick(e) {
     }).then(r => r.json()).then(j => {
         if (j.status == "Ok") {
             articleText.value = "";
+            articleText.dataset.replyId = "";
             loadArticles();
         }
         else alert(j.message);
@@ -34,25 +39,45 @@ function buttonPublishClick(e) {
 function loadArticles() {
     const articles = document.querySelector('articles');
     if (!articles) throw "articles element not found";
+
+    const articleText = document.getElementById("article-text");
+
     let tplPromise = fetch("/templates/article.html");
 
     const TopicId = articles.getAttribute("topic-id");
+    const authorId = articleText ? articleText.getAttribute("data-author-id") : null;
+
+    const GuidEmpty = "00000000-0000-0000-0000-000000000000";
     fetch(`/api/article/${TopicId}`)
         .then(r => r.json())
         .then(async j => {
             console.log(j)
             var html = "";
             const tpl = await tplPromise.then(r => r.text());
-            for (let articles of j) {
+            for (let article of j) {
                 html +=
-                    tpl.replaceAll("{{author}}", articles.author.realName)
-                        .replaceAll("{{text}}", articles.text)
-                        .replaceAll("{{avatar}}", (articles.author.avatar == null || articles.author.avatar == "" ?
-                            "no-avatar.png" : articles.author.avatar))
-                        .replaceAll("{{moment}}", new Date(articles.createdDate).toLocaleString())
-                        .replaceAll("{{id}}", articles.id)
-                    .replaceAll("{{picture}}", articles.pictureFile == null || articles.pictureFile == "" ? "no-picture.png" : articles.pictureFile)
-                        .replaceAll("{{reply}}", articles.replyId == null ? "" : articles.replyId);
+                    tpl.replaceAll("{{author}}", article.author.realName)
+                        .replaceAll("{{text}}", article.text)
+                        .replaceAll("{{avatar}}", (article.author.avatar == null || article.author.avatar == "" ?
+                            "no-avatar.png" : article.author.avatar))
+                        .replaceAll("{{moment}}", new Date(article.createdDate).toLocaleString())
+                        .replaceAll("{{id}}", article.id)
+                        .replaceAll("{{picture}}", article.pictureFile == null || article.pictureFile == "" ? "no-picture.png" : article.pictureFile)
+                        .replaceAll("{{reply}}",( article.replyId == GuidEmpty
+                        ? ""
+                        : `<b>${article.reply.author.realName}</b>:`
+                            + article.reply.text.substring(0, 13)
+                            + (article.reply.text.length > 13 ? "..." : "")
+                        ))
+                    .replace("{{reply-text}}", article.reply == null ? "" : article.reply.text)
+                        .replace("{{del-display}}", /* кнопка удаления (стиль display) */
+                            (article.authorId == authorId
+                                ? "inline-block"
+                                : "none"))
+                        .replace("{{ins-display}}", /* кнопка редактирования (стиль display) */
+                            (article.authorId == authorId
+                                ? "inline-block"
+                                : "none"));
             }
             articles.innerHTML = html;
             onArticlesLoaded();
@@ -66,7 +91,9 @@ function onArticlesLoaded() {
 }
 
 function replyClick(e) {
-    console.log(e.target.closest(".article").getAttribute("data-id"));
+    const id = e.target.closest(".article").getAttribute("data-id");
+    //console.log(id);
     const articleText = document.getElementById("article-text");
     if (articleText) articleText.focus();
+    articleText.setAttribute("data-reply-id", id);
 }

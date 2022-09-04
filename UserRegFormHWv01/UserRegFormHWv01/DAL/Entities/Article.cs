@@ -16,6 +16,8 @@ namespace UserRegFormHWv01.DAL.Entities
         public Entities.User Author { get; set; }
 
         public Guid? ReplyId { get; set; }
+        public Entities.Article Reply { get; set; }
+
         public DateTime CreatedDate { get; set; }
         public string PictureFile { get; set; }
     }
