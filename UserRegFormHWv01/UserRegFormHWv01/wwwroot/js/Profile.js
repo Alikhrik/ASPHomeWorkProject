@@ -66,7 +66,53 @@ document.addEventListener('DOMContentLoaded', () => {
     const userNewAvatar = document.getElementById("userNewAvatar");
     if (!userNewAvatar) throw "userNewAvatar not found in DOM";
     userNewAvatar.onchange = avatarChange;
+
+    loadDeletedMessages();
 });
+
+function loadDeletedMessages() {
+    const deletedMessages = document.getElementById("delMessages");
+    if (!deletedMessages) throw "delMessages not found in DOM";
+
+    const userId = deletedMessages.getAttribute("user-id");
+    fetch(`/api/article/${userId}`, {
+        method: "PUT"
+    }).then(r => r.json())
+        .then(j => {
+            console.log(j);
+            var html = "<tr><th>Дата</th><th>Топик</th><th>Текст</th></tr>";
+            for (let article of j) {
+                html += 
+                    `<tr>
+                        <td>${(new Date(article.createdDate).toLocaleDateString() == (new Date().toLocaleDateString())
+                        ? new Date(article.createdDate).toLocaleTimeString()
+                        : new Date(article.createdDate).toLocaleString())}</td>
+                        <td>${article.topic.title}</td>
+                        <td>${article.text}</td>
+                    </tr>`;
+            }
+            deletedMessages.innerHTML = html;
+
+        });
+}
+
+/*
+ * .then(j => {
+            console.log(j);
+            var html = "";
+            for (let article of j) {
+                html += 
+                    `<tr>
+                        <td>${new Date(article.createdDate).toLocaleString()}</td>
+                        <td>${article.topic.title}</td>
+                        <td>${article.text}</td>
+                    </tr>`;
+            }
+            deletedMessages.innerHTML = html;
+
+        });
+ */
+
 
 function avatarChange(e) {
     if (e.target.files.length > 0) {

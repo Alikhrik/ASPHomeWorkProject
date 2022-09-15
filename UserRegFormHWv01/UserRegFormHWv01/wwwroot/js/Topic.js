@@ -48,7 +48,10 @@ function loadArticles() {
     const authorId = articleText ? articleText.getAttribute("data-author-id") : null;
 
     fetch(`/api/article/${TopicId}`)
-        .then(r => r.json())
+        .then(r => {
+            if (r.statusText == "OK") return r.json();
+            throw "topics element not found";
+        })
         .then(async j => {
             console.log(j)
             var html = "";
@@ -62,7 +65,7 @@ function loadArticles() {
                         .replaceAll("{{moment}}", new Date(article.createdDate).toLocaleString())
                         .replaceAll("{{id}}", article.id)
                         .replaceAll("{{picture}}", article.pictureFile == null || article.pictureFile == "" ? "no-picture.png" : article.pictureFile)
-                        .replaceAll("{{reply}}",( article.replyId == null
+                        .replaceAll("{{reply}}", ( article.replyId == null
                         ? ""
                         : `<b>${article.reply.author.realName}</b>:`
                             + article.reply.text.substring(0, 13)
@@ -102,5 +105,11 @@ function replyClick(e) {
 
 function deleteClick(e) {
     const id = e.target.closest(".article").getAttribute("data-id");
-    console.log(id);
+    if (confirm(`Delete article ${id}?`)) {
+        //console.log(id);
+        fetch(`/api/article/${id}`, {
+            method: "DELETE"
+        }).then(r => r.json())
+            .then(j => console.log(j));
+    }
 }

@@ -12,11 +12,31 @@ namespace UserRegFormHWv01.API
     {
         private readonly IntroContext _context;
         private readonly IHasher _hasher;
+        private readonly IAuthService _authService;
 
-        public ArticleController(IntroContext context, IHasher hasher)
+        public ArticleController(IntroContext context, IHasher hasher, IAuthService authService)
         {
             _context = context;
             _hasher = hasher;
+            _authService = authService;
+        }
+        [HttpPut("{UserId}")]
+
+        public IEnumerable<DAL.Entities.Article> Put(string UserId)
+        {
+            Guid guid;
+            try { guid = Guid.Parse(UserId); }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            return _context.Articles
+                .Include(a => a.Author)
+                .Include(a => a.Topic)
+                .Include(a => a.Reply)
+                .Where(a => a.AuthorId == guid && a.DeleteMoment == null)
+                .OrderBy(a => a.CreatedDate);
         }
 
         [HttpGet("{TopicId}")]
@@ -28,11 +48,6 @@ namespace UserRegFormHWv01.API
             {
                 return null;
             }
-            //var list = _context.Articles
-            //    .Include(a => a.Author)
-            //    .Include(a => a.Topic)
-            //    .Where(a => a.TopicId == guid)
-            //    .OrderBy(a => a.CreatedDate);
 
             return _context.Articles
                 .Include(a => a.Author)
@@ -89,11 +104,11 @@ namespace UserRegFormHWv01.API
 
             var user = _context.Users.Find(userGuid);
             if (user == null)
-                return new { status = "Error",  message = "Forbidden" };
+                return new { status = "Error", message = "Forbidden" };
             var topic = _context.Topics.Find(topicGuid);
             if (topic == null)
                 return new { status = "Error", message = "Forbidden" };
-            
+
 
             string HAvatarName = string.Empty;
             if (article.PictureFile != null)
@@ -132,6 +147,37 @@ namespace UserRegFormHWv01.API
             return HFileName;
         }
 
+        [HttpDelete("{id}")]
+        public object Delete(string id)
+        {
+            if (_authService.User == null)
+            {
+                return new { status = "Error", message = "Anauthorized" };
+            }
+
+            Guid articleId;
+            try
+            {
+                articleId = Guid.Parse(id);
+            }
+            catch
+            {
+                return new { status = "Error", message = "Invalid id" };
+            }
+
+            var article = _context.Articles.Find(articleId);
+            if (article == null)
+            {
+                return new { status = "Error", message = "Invalid article" };
+            }
+
+            if(_authService.User.Id != articleId)
+            {
+                return new { status = "Error", message = "Forbidden" };
+            }
+
+            return new { id };
+        }
         public object Default(string? id)
         {
             return new { HttpContext.Request.Method, id };
