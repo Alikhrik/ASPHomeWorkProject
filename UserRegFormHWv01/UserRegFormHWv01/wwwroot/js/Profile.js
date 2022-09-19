@@ -83,36 +83,40 @@ function loadDeletedMessages() {
             var html = "<tr><th>Дата</th><th>Топик</th><th>Текст</th></tr>";
             for (let article of j) {
                 html += 
-                    `<tr>
+                    `<tr data-id="${article.id}">
                         <td>${(new Date(article.createdDate).toLocaleDateString() == (new Date().toLocaleDateString())
                         ? new Date(article.createdDate).toLocaleTimeString()
                         : new Date(article.createdDate).toLocaleString())}</td>
                         <td>${article.topic.title}</td>
                         <td>${article.text}</td>
+                        <td>
+                            <del>&#x274C;</del>
+                        </td>
                     </tr>`;
             }
             deletedMessages.innerHTML = html;
-
+            onDeletedMessagesLoaded();
         });
 }
 
-/*
- * .then(j => {
-            console.log(j);
-            var html = "";
-            for (let article of j) {
-                html += 
-                    `<tr>
-                        <td>${new Date(article.createdDate).toLocaleString()}</td>
-                        <td>${article.topic.title}</td>
-                        <td>${article.text}</td>
-                    </tr>`;
-            }
-            deletedMessages.innerHTML = html;
+function onDeletedMessagesLoaded() {
+    for (let del of document.querySelectorAll("td del")) {
+        del.onclick = reestablishClick;
+    }
+}
 
-        });
- */
-
+function reestablishClick(e) {
+    const id = e.target.closest("tr").getAttribute("data-id");
+    if (confirm(`Reestablish article ${id} ?`)) {
+        fetch(`/api/article/${id}`, {
+            method: "PATCH"
+        }).then(r => r.json())
+            .then(j => {
+                console.log(j);
+                loadDeletedMessages();
+            });
+    }
+}
 
 function avatarChange(e) {
     if (e.target.files.length > 0) {

@@ -110,6 +110,9 @@ function deleteClick(e) {
         fetch(`/api/article/${id}`, {
             method: "DELETE"
         }).then(r => r.json())
-            .then(j => console.log(j));
+            .then(j => {
+                console.log(j);
+                loadArticles();
+            });
     }
 }

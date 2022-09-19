@@ -85,10 +85,12 @@ figcaption {
         margin-right: 2em;
         margin-top: 3px;
         text-decoration: none;
+        cursor: pointer;
     }
     .article del,
+    .article span,
     .article ins,
-    .article span {
+    td del {
         -webkit-touch-callout: none; /* iOS Safari */
         -webkit-user-select: none; /* Chrome/Safari/Opera */
         -khtml-user-select: none; /* Konqueror */
@@ -97,6 +99,12 @@ figcaption {
         user-select: none; /* Non-prefixed version, currently
                                   not supported by any browser */
     }
+
+td del {
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+}
 
     .article ins { /* значок (символ) редактирования статьи */
         transform: rotate(90deg);

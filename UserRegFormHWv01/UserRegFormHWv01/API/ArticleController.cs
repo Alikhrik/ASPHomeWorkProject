@@ -20,8 +20,8 @@ namespace UserRegFormHWv01.API
             _hasher = hasher;
             _authService = authService;
         }
-        [HttpPut("{UserId}")]
 
+        [HttpPut("{UserId}")]
         public IEnumerable<DAL.Entities.Article> Put(string UserId)
         {
             Guid guid;
@@ -35,7 +35,7 @@ namespace UserRegFormHWv01.API
                 .Include(a => a.Author)
                 .Include(a => a.Topic)
                 .Include(a => a.Reply)
-                .Where(a => a.AuthorId == guid && a.DeleteMoment == null)
+                .Where(a => a.AuthorId == guid && a.DeleteMoment != null)
                 .OrderBy(a => a.CreatedDate);
         }
 
@@ -171,13 +171,53 @@ namespace UserRegFormHWv01.API
                 return new { status = "Error", message = "Invalid article" };
             }
 
-            if(_authService.User.Id != articleId)
+            if(_authService.User.Id != article.AuthorId)
             {
                 return new { status = "Error", message = "Forbidden" };
             }
 
-            return new { id };
+            article.DeleteMoment = DateTime.Now;
+            _context.SaveChanges();
+
+            return new { status ="Ok", message = "Deleted" };
         }
+
+
+        [HttpPatch("{id}")]
+        public object Patch(string id)
+        {
+            if (_authService.User == null)
+            {
+                return new { status = "Error", message = "Anauthorized" };
+            }
+
+            Guid articleId;
+            try
+            {
+                articleId = Guid.Parse(id);
+            }
+            catch
+            {
+                return new { status = "Error", message = "Invalid id" };
+            }
+
+            var article = _context.Articles.Find(articleId);
+            if (article == null)
+            {
+                return new { status = "Error", message = "Invalid article" };
+            }
+
+            if (_authService.User.Id != article.AuthorId)
+            {
+                return new { status = "Error", message = "Forbidden" };
+            }
+
+            article.DeleteMoment = null;
+            _context.SaveChanges();
+
+            return new { status = "Ok", message = "Reestablish" };
+        }
+
         public object Default(string? id)
         {
             return new { HttpContext.Request.Method, id };
